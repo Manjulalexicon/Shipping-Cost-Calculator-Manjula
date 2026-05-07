@@ -1,6 +1,7 @@
 package se.lexicon.calculator;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import se.lexicon.model.Destination;
 import se.lexicon.model.ShippingRequest;
@@ -10,25 +11,27 @@ import se.lexicon.service.ShippingCostCalculator;
 import java.math.BigDecimal;
 
 @Component
+public class StandardInternationalShipping implements ShippingCostCalculator {
 
-public class ExpressInternationalShipping implements ShippingCostCalculator {
+    @Value("${shipping.international.standard.base}")
+    private BigDecimal base;
 
-    private static final BigDecimal BASE = BigDecimal.valueOf(25);
-    private static final BigDecimal PER_KG = BigDecimal.valueOf(4.5);
+    @Value("${shipping.international.standard.perkg}")
+    private BigDecimal perKg;
 
     @PostConstruct
     public void init() {
-        System.out.println(getClass().getSimpleName() + " initialized");
+        System.out.println("StandardInternationalShipping bean created");
     }
 
     @Override
     public boolean supports(ShippingRequest r) {
         return r.destination() == Destination.INTERNATIONAL &&
-                r.speed() == Speed.EXPRESS;
+                r.speed() == Speed.STANDARD;
     }
 
     @Override
     public BigDecimal calculate(ShippingRequest r) {
-        return BASE.add(PER_KG.multiply(r.weightKg()));
+        return base.add(perKg.multiply(r.weightKg()));
     }
 }

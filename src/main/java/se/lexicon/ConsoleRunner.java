@@ -8,6 +8,8 @@ import se.lexicon.model.Speed;
 import se.lexicon.service.ShippingCalculatorFactory;
 import se.lexicon.service.ShippingService;
 
+import java.math.BigDecimal;
+
 
 @Component
 public class ConsoleRunner implements CommandLineRunner {
@@ -22,7 +24,12 @@ public class ConsoleRunner implements CommandLineRunner {
     public void run(String... args) {
 
         ShippingRequest request =
-                new ShippingRequest(Destination.DOMESTIC, Speed.STANDARD, 10);
+                new ShippingRequest(
+                        Destination.DOMESTIC,
+                        Speed.STANDARD,
+                        BigDecimal.valueOf(10)
+                );
+
 
         System.out.println("Cost: " + shippingService.quote(request));
     }
